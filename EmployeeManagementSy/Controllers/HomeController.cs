@@ -1,9 +1,11 @@
 ﻿using EmployeeManagementSy.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace EmployeeManagementSy.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,7 +17,7 @@ namespace EmployeeManagementSy.Controllers
 
         public IActionResult Index()
         {
-            return /*!User.Identity.IsAuthenticated ? this.Redirect("~/identity/account/login") : */View();
+            return !User.Identity.IsAuthenticated? this.Redirect("~/identity/account/login"): View();
         }
 
         public IActionResult Privacy()

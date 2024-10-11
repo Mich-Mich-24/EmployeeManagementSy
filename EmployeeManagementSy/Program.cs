@@ -1,4 +1,5 @@
 using EmployeeManagementSy.Data;
+using EmployeeManagementSy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,13 +11,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+// Add Identity services, including Role management
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()  // Add role management here
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 
-//Authentication/Authorization
-builder.Services.AddAuthentication();
-builder.Services.AddAuthorization();
+// Authentication/Authorization is already handled by AddDefaultIdentity
+// No need for separate AddAuthentication/AddAuthorization unless you're adding custom schemes
 
 var app = builder.Build();
 
@@ -28,7 +31,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -37,8 +39,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication(); // Ensure this is before UseAuthorization
+app.UseAuthorization();  // This comes after UseAuthentication
 
 app.MapControllerRoute(
     name: "default",
