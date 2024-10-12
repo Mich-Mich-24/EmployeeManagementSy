@@ -44,5 +44,7 @@ namespace EmployeeManagementSy.Data
         public DbSet<City> Cities { get; set; }
 
         public DbSet<LeaveApplication> LeaveApplications { get; set; }
+
+        public DbSet<SystemProfile> SystemProfiles { get; set; }
     }
 }
